@@ -53,8 +53,15 @@ public class MathQuestionService implements QuestionService {
 
     @Override
     public Question getRandomQuestion() {
-        List<Question> questionList = List.copyOf(questionRepository.getAll());
-        return questionList.get(random.nextInt(questionList.size()));
+        if (random.nextBoolean()) {
+            int a = random.nextInt(100);
+            int b = random.nextInt(100);
+            return new Question("Сколько будет " + a + " + " + b + " ?", String.valueOf(a + b));
+        } else {
+            int a = random.nextInt(100);
+            int b = random.nextInt(100);
+            return new Question("Сколько будет " + a + " - " + b + " ?", String.valueOf(a - b));
+        }
     }
 
     @Override
