@@ -1,26 +1,25 @@
-package com.example.courseWorkTwo.questionService;
+package com.example.courseWorkTwo.mathService;
 
 import com.example.courseWorkTwo.javaRepositories.QuestionRepository;
 import com.example.courseWorkTwo.question.Question;
+import com.example.courseWorkTwo.questionService.QuestionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
-@Service("javaService")
-public class JavaQuestionService implements QuestionService{
-
-    private final QuestionRepository questionRepository;
+@Service("mathService")
+public class MathQuestionService implements QuestionService {
 
     private Random random = new Random();
 
+    private final QuestionRepository questionRepository;
 
-    public JavaQuestionService(@Qualifier("javaRepository") QuestionRepository questionRepository) {
+    public MathQuestionService(@Qualifier("mathRepository") QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
     }
 
     @Override
@@ -49,12 +48,13 @@ public class JavaQuestionService implements QuestionService{
 
     @Override
     public Collection<Question> getAll() {
-        return Set.copyOf(questionRepository.getAll());
+        return Collections.unmodifiableCollection(getAll());
     }
 
     @Override
     public Question getRandomQuestion() {
-        return List.copyOf(questionRepository.getAll()).get(random.nextInt(questionRepository.getAll().size()));
+        List<Question> questionList = List.copyOf(questionRepository.getAll());
+        return questionList.get(random.nextInt(questionList.size()));
     }
 
     @Override

@@ -8,7 +8,11 @@ public interface QuestionService {
 
     boolean add(String question, String answer);
 
+    boolean add(Question question);
+
     boolean remove(String question, String answer);
+
+    boolean remove(Question question);
 
     Collection<Question> getAll();
 

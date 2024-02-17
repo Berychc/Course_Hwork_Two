@@ -1,15 +1,18 @@
 package com.example.courseWorkTwo;
 
+import com.example.courseWorkTwo.javaRepositories.JavaQuestionRepository;
+import com.example.courseWorkTwo.question.Question;
 import com.example.courseWorkTwo.questionService.JavaQuestionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-import static com.example.courseWorkTwo.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -17,40 +20,55 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class JavaQuestionServiceTest {
 
-    private final JavaQuestionService service = new JavaQuestionService();
+   @Mock
+   private JavaQuestionRepository repository;
+
+   @InjectMocks
+   private JavaQuestionService service;
 
     @Test
     public void addQuestionTest() {
-        service.add(QUESTION1, ANSWER1);
+        Question question = new Question("Привет", "Пока");
+        when(repository.add(question)).thenReturn(true, false);
 
-        assertTrue(service.getAll().contains(FULL_QUESTION1));
+        assertTrue(service.add(question));
+        assertFalse(service.add(question));
+
     }
 
     @Test
     public void removeQuestionTest() {
-        service.remove(QUESTION1, ANSWER1);
+        Question question = new Question("Привет", "Пока");
+        when(repository.remove(question)).thenReturn(true, false);
 
-        assertFalse(service.getAll().contains(FULL_QUESTION1));
+        assertTrue(service.remove(question));
+        assertFalse(service.remove(question));
     }
 
     @Test
     public void getAllTest() {
-        service.add(QUESTION1, ANSWER1);
-        service.add(QUESTION2, ANSWER2);
-        service.add(QUESTION3, ANSWER3);
+        Set<Question> questionSet = Set.of(
+                new Question("Привет", "Пока"),
+                new Question("Привет1", "Пока1"));
 
-        assertTrue(service.getAll().containsAll(List.of(FULL_QUESTION1, FULL_QUESTION2, FULL_QUESTION3)));
+        when(repository.getAll()).thenReturn(questionSet);
+        assertTrue(service.getAll().containsAll(questionSet));
     }
 
     @Test
     public void getRandomQuestionTest() {
-        service.add(QUESTION1, ANSWER1);
-        service.add(QUESTION2, ANSWER2);
+        Set<Question> questionSet = Set.of(
+                new Question("Привет", "Пока"),
+                new Question("Привет1", "Пока1"));
+
+        when(repository.getAll()).thenReturn(questionSet);
 
         Random random = mock(Random.class, withSettings().withoutAnnotations());
-        when(random.nextInt(anyInt())).thenReturn(1);
-
+        when(random.nextInt(anyInt())).thenReturn(0, 1);
         service.setRandom(random);
-        assertEquals(FULL_QUESTION1, service.getRandomQuestion());
+
+        assertEquals(new Question("Привет", "Пока"), service.getRandomQuestion());
+        assertEquals(new Question("Привет1", "Пока1"), service.getRandomQuestion());
+
     }
 }

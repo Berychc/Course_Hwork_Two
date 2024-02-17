@@ -1,36 +1,56 @@
 package com.example.courseWorkTwo;
 
-import com.example.courseWorkTwo.examinerService.ExaminerService;
 import com.example.courseWorkTwo.examinerService.ExaminerServiceImpl;
+import com.example.courseWorkTwo.question.Question;
 import com.example.courseWorkTwo.questionService.QuestionService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.example.courseWorkTwo.TestConstants.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 public class ExaminerServiceTest {
 
-    @Mock
-    QuestionService questionMock;
+    private final QuestionService javaServiceMock = mock(QuestionService.class);
 
-    @InjectMocks
-    ExaminerServiceImpl service;
+    private final QuestionService mathServiceMock = mock(QuestionService.class);
+
+    private final ExaminerServiceImpl service = new ExaminerServiceImpl(javaServiceMock, mathServiceMock);
 
     @Test
-    public void getQuestionsTest() {
+    public void getRandomTest() {
+        when(javaServiceMock.getRandomQuestion()).thenReturn(
+                new Question("Привет", "Пока"),
+                new Question("Приве1", "Пока1"));
 
-        when(questionMock.getSize()).thenReturn(1);
+        when(mathServiceMock.getRandomQuestion()).thenReturn(
+                new Question("Привет", "Пока"),
+                new Question("Приве1", "Пока1"));
 
-        when(questionMock.getRandomQuestion()).thenReturn(FULL_QUESTION1);
+        when(javaServiceMock.getSize()).thenReturn(2);
+        when(mathServiceMock.getSize()).thenReturn(2);
 
-        assertEquals(TEST_QUESTIONS2, service.getQuestions(1));
+        Random randomMock = mock(Random.class);
+        when(randomMock.nextInt(anyInt())).thenReturn(0, 1, 1, 0);
+        service.setRandom(randomMock);
+
+        Collection<Question> actual = service.getQuestions(4);
+
+        List<Question> expected = List.of(
+                new Question("Привет", "Пока"),
+                new Question("Привет1", "Пока1"),
+                new Question("Привет2", "Пока2"),
+                new Question("Приве3т", "Пока3"));
+
+        Assertions.assertIterableEquals(expected, actual);
     }
-
 }
