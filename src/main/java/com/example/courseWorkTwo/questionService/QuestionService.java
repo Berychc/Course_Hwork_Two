@@ -5,15 +5,14 @@ import com.example.courseWorkTwo.question.Question;
 import java.util.Collection;
 
 public interface QuestionService {
-    Question add(String question, String answer);
 
-    Question add(Question question);
+    boolean add(String question, String answer);
 
-    Question remove(Question question);
-
-    Question remove(String question, String answer);
+    boolean remove(String question, String answer);
 
     Collection<Question> getAll();
 
     Question getRandomQuestion();
+
+    int getSize();
 }

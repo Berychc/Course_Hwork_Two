@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class QuestionsException extends RuntimeException {
-    public String QuestionsException() {
-        return "Превышено максимальное количество вопросов";
+    public QuestionsException(int amount, int size) {
+        super(String.format("Запрошенная сумма %d превышает текущий размер %d", amount , size));
     }
 }

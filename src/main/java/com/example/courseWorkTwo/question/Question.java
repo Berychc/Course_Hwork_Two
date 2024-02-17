@@ -1,12 +1,9 @@
 package com.example.courseWorkTwo.question;
 
-
-import org.springframework.stereotype.Component;
-
 import java.util.Objects;
 
-@Component
 public class Question {
+
     private final String question;
     private final String answer;
 
@@ -38,9 +35,9 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" +
-                "question='" + question + '\'' +
-                ", answer='" + answer + '\'' +
+        return "Question {" +
+                "question = " + question + '\'' +
+                ", answer = " + answer + '\'' +
                 '}';
     }
 }

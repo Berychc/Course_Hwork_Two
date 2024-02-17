@@ -1,7 +1,6 @@
 package com.example.courseWorkTwo.questionService;
 
 import com.example.courseWorkTwo.question.Question;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -9,42 +8,26 @@ import java.util.*;
 @Service
 public class JavaQuestionService implements QuestionService{
 
-    @Autowired
-    private final Set<Question> questions;
+    private final Set<Question> questions = new HashSet<>();
 
-    public JavaQuestionService(Set<Question> questions) {
-        this.questions = questions;
+    private Random random = new Random();
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 
-
     @Override
-    public Question add(String question, String answer) {
+    public boolean add(String question, String answer) {
         Question newQuestion = new Question(question, answer);
 
-        questions.add(newQuestion);
-        return newQuestion;
+        return questions.add(newQuestion);
     }
 
     @Override
-    public Question add(Question question) {
-
-        questions.add(question);
-        return question;
-    }
-
-    @Override
-    public Question remove(String question, String answer) {
+    public boolean remove(String question, String answer) {
         Question newQuestion = new Question(question, answer);
 
-        questions.remove(newQuestion);
-        return newQuestion;
-    }
-
-    @Override
-    public Question remove(Question question) {
-
-        questions.remove(question);
-        return question;
+        return questions.remove(newQuestion);
     }
 
     @Override
@@ -54,13 +37,11 @@ public class JavaQuestionService implements QuestionService{
 
     @Override
     public Question getRandomQuestion() {
-        Random random = new Random();
-        int listSize = questions.size();
+        return List.copyOf(questions).get(random.nextInt(questions.size()));
+    }
 
-        if (listSize > 0) {
-            return getRandomQuestion();
-        } else {
-            return null;
-        }
+    @Override
+    public int getSize() {
+        return questions.size();
     }
 }
