@@ -23,17 +23,17 @@ public class MathController {
     @GetMapping("/add")
     public boolean addQuestion(@RequestParam String question,
                                @RequestParam String answer) {
-        return service.add(question, answer);
+        throw new RuntimeException("405 Method Not Allowed");
     }
 
     @GetMapping("/remove")
     public boolean removeQuestion(@RequestParam String question,
                                @RequestParam String answer) {
-        return service.remove(question, answer);
+        throw new RuntimeException("405 Method Not Allowed");
     }
 
     @GetMapping
     public Collection<Question> getQuestion() {
-        return service.getAll();
+        throw new RuntimeException("405 Method Not Allowed");
     }
 }

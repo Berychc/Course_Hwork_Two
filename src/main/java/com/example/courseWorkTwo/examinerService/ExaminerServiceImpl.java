@@ -16,9 +16,7 @@ public class ExaminerServiceImpl implements ExaminerService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExaminerServiceImpl.class);
 
-    private final QuestionService javaService;
-
-    private final QuestionService mathService;
+    private final Map<String, QuestionService> service;
 
     Random random = new Random();
 
@@ -28,20 +26,20 @@ public class ExaminerServiceImpl implements ExaminerService {
 
     public ExaminerServiceImpl(@Qualifier("javaService") QuestionService javaService,
                                @Qualifier("mathService") QuestionService mathService) {
-        this.javaService = javaService;
-        this.mathService = mathService;
+        this.service = new HashMap<>();
+        this.service.put("javaService", javaService);
+        this.service.put("mathService", mathService);
     }
 
     @Override
     public Collection<Question> getQuestions(int amount) {
-        List<QuestionService> serviceList = List.of(javaService, mathService);
-
-        int size = serviceList.stream().mapToInt(QuestionService::getSize).sum();
+        int size = service.values().stream().mapToInt(QuestionService::getSize).sum();
         if (amount <= 0 || size < amount) {
-            logger.error("Неправильная запрошенная сумма" + size);
+            logger.error("Неправильная запрошенная сумма: " + size);
             throw new QuestionsException(amount, size);
         }
         Set<Question> questions = new HashSet<>();
+        List<QuestionService> serviceList = new ArrayList<>(service.values());
         while (questions.size() < amount) {
             questions.add(serviceList.get(random.nextInt(serviceList.size())).getRandomQuestion());
         }
